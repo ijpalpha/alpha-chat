@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9  # Specify your Python version
+    commands:
+      - echo "Installing dependencies..."
+      - pip install -r requirements.txt
+
+  pre_build:
+    commands:
+      - echo "Pre-build phase"
+
+  build:
+    commands:
+      - echo "Build phase"
+      # Add any build commands if necessary
+
+  post_build:
+    commands:
+      - echo "Post-build phase"
+
+artifacts:
+  files:
+    - '**/*'  # Include all files for deployment

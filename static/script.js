@@ -1,39 +1,35 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    padding: 20px;
-}
+document.getElementById("processPdfBtn").addEventListener("click", function() {
+    fetch("/process_pdf", {
+        method: "POST",
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => console.error('Error processing PDF:', error));
+});
 
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+document.getElementById("sendBtn").addEventListener("click", function() {
+    const userInput = document.getElementById("userInput").value;
+    if (!userInput) return;
 
-h1 {
-    text-align: center;
-}
+    const messageElement = document.createElement("div");
+    messageElement.textContent = "You: " + userInput;
+    document.getElementById("messages").appendChild(messageElement);
 
-.chat-box {
-    margin-top: 20px;
-}
-
-#messages {
-    border: 1px solid #ccc;
-    height: 300px;
-    overflow-y: scroll;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-#userInput {
-    width: calc(100% - 100px);
-    padding: 10px;
-}
-
-#sendBtn {
-    padding: 10px;
-}
+    fetch("/ask", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question: userInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const answerElement = document.createElement("div");
+        answerElement.textContent = "Bot: " + data.answer;
+        document.getElementById("messages").appendChild(answerElement);
+        document.getElementById("userInput").value = ''; // Clear input
+    })
+    .catch(error => console.error('Error asking question:', error));
+});
